@@ -1,10 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { WeatherService } from './services/weather.service';
+import { WeatherData } from './models/weather.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'WeatherApp';
+export class AppComponent implements OnInit {
+
+  constructor(private weatherService: WeatherService) {
+  }
+
+  cityName: string = 'Israel';
+  weatherData?: WeatherData;
+
+  ngOnInit(): void {
+    this.getWeatherDate(this.cityName)
+  }
+
+  onSubmit() {
+    this.getWeatherDate(this.cityName);
+    this.cityName = '';
+  }
+
+  private getWeatherDate(cityName: string) {
+    this.weatherService.getWeatherData(cityName)
+      .subscribe({
+        next: (response) => {
+          this.weatherData = response;
+          console.log(response);
+        }
+      });
+  }
 }
